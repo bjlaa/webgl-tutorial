@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>WebGL First Try</title>
+  </head>
+  <body onload="main()">
+    <canvas id="glcanvas">
+      Your browser doesn't appear to support the
+      <code>&lt;canvas&gt;</code> element.
+    </canvas>
+    <script>
+      const canvas = document.getElementById('glcanvas')
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+
+      const main = () => {
+        let GL
+        try {
+          GL = canvas.getContext('experimental-webgl', { antialias: false })
+        } catch(e) {
+          alert('Your browser does not support webGL.')
+          return false
+        }
+
+        const shader_vertex_source = '\n\
+        attribute vec2 position \n\
+        void main(void) {\n\
+        gl_Position = vec4(position, 0.0, 1.0\n\
+        }'
+
+        const shader_fragment_source = '\n\
+        precision mediump float\n\
+        void main(void) {\n\
+        gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0)\n\
+        }'
+
+        const get_shader = (source, type, typeString) => {
+          const shader = GL.createShader(type)
+          GL.shaderSource(shader, source)
+          GL.compileShader(shader)
+          if (!GL.getShaderParameter(shader, GL.COMPILE_STATUS)) {
+            alert(`ERROR IN ${typeString} SHADER: ${GL.getShaderInfoLog(shader)}`)
+            return false
+          }
+        }
+
+        const shader_vertex = get_shader(shader_vertex_source, GL.VERTEX_SHADER, 'VERTEX')
+        const shader_fragment = get_shader(shader_fragment_source, GL.FRAGMENT_SHADER, 'FRAGMENT')
+      }
+    </script>
+  </body>
+</html>
+
+
+
+
+
+
